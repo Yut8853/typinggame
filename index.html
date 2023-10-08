@@ -11,32 +11,71 @@
     <input type="text" id="inputText" placeholder="上に表示された文字列を入力してください" >
     <div id="outputText"></div>
     <script>
+      let globalData;
+    
       fetch('./ccsvoice.JSON')
-        .then(response => {
-          if (!response.ok) {
-            throw new Error("error " + response.status);
-          }
-          return response.json();
-        })
-        .then(data => {
-          displayRandomValue(data);
-        })
-        .catch(function(error) {
-          console.error("Fetch error: " + error.message);
-        });
-      
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("error " + response.status);
+        }
+        return response.json();
+      })
+      .then(data => {
+        globalData = data;
+        displayRandomValue(data);
+      })
+      .catch(function(error) {
+        console.error("Fetch error: " + error.message);
+      });
+    
       function displayRandomValue(data) {
         const randomIndex = Math.floor(Math.random() * data.length);
         const randomValue = data[randomIndex].DICUT11;
-        
+
         const displayDiv = document.getElementById('display');
         displayDiv.textContent = randomValue;
-      }
-      function updateOutput() {
+        displayDiv.style.color = "black"; // ここで文字色を黒にリセット
+      }     
+
+    
+      document.getElementById('inputText').addEventListener('keyup', function(event) {
+        if (event.keyCode === 13) { // エンターキーが押されたとき
+          const displayValue = document.getElementById('display').textContent;
+
+          if (displayValue === "正解" || displayValue === "間違ってますよー") {
+            displayRandomValue(globalData); // 次の問題を表示
+            document.getElementById('inputText').value = ""; // 入力をクリア
+          } else {
+            checkAnswer();
+          }
+        }
+      });
+
+      function checkAnswer() {
+        const displayValue = document.getElementById('display').textContent;
         const inputValue = document.getElementById('inputText').value;
-        document.getElementById('outputText').textContent = inputValue;
+
+        const displayDiv = document.getElementById('display');
+
+        // 入力が表示文字列の一部または完全一致の場合
+        if (displayValue.startsWith(inputValue)) {
+          // 入力が表示文字列と完全一致の場合
+          if (inputValue === displayValue) {
+            displayDiv.textContent = "せ、正解！";
+            displayDiv.style.color = "green";
+            document.getElementById('inputText').value = "";
+            setTimeout(() => {
+              displayRandomValue(globalData); // 少し待ってから次の問題を表示
+            }, 1800);
+          } else {
+            return
+          }
+        } else {
+          displayDiv.textContent = "間違ってますよー";
+          displayDiv.style.color = "red";
+          document.getElementById('inputText').value = ""; // 入力をクリア
+        }
       }
-      
-      </script>
+    </script>
 </body>
 </html>
