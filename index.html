@@ -8,6 +8,7 @@
 </head>
   <body>
     <div id="display"></div>
+    <input type="text" id="inputText" placeholder="上に表示された文字列を入力してください" >
     <div id="outputText"></div>
     <script>
       fetch('./ccsvoice.JSON')
@@ -29,9 +30,13 @@
         const randomValue = data[randomIndex].DICUT11;
         
         const displayDiv = document.getElementById('display');
-        displayDiv.innerHTML = randomValue;
+        displayDiv.textContent = randomValue;
       }
-
+      function updateOutput() {
+        const inputValue = document.getElementById('inputText').value;
+        document.getElementById('outputText').textContent = inputValue;
+      }
+      
       </script>
 </body>
 </html>
