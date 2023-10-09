@@ -71,9 +71,11 @@
             return
           }
         } else {
-          displayDiv.textContent = "間違ってますよー";
-          displayDiv.style.color = "red";
-          document.getElementById('inputText').value = ""; // 入力をクリア
+          setTimeout(()=> {
+            displayDiv.textContent = "間違ってますよー";
+            displayDiv.style.color = "red";
+            document.getElementById('inputText').value = ""; // 入力をクリア
+          }, 1800)
         }
       }
     </script>
